@@ -6,6 +6,7 @@ import { conversations } from '@grammyjs/conversations';
 import Redis from 'ioredis';
 import { BotContext, SessionData } from '../shared/bot-context.type';
 import { RemindersService } from '../features/reminders/reminders.service';
+import { NotifierService } from '../features/notifier/notifier.service';
 
 export const REMINDERS_COMPOSER = 'REMINDERS_COMPOSER';
 export const AI_COMPOSER = 'AI_COMPOSER';
@@ -22,6 +23,7 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly config: ConfigService,
     private readonly remindersService: RemindersService,
+    private readonly notifierService: NotifierService,
     @Inject(REMINDERS_COMPOSER) private readonly remindersComposer: Composer<BotContext>,
     @Inject(AI_COMPOSER) private readonly aiComposer: Composer<BotContext>,
     @Inject(FLASHCARD_COMPOSER) private readonly flashcardComposer: Composer<BotContext>,
@@ -72,7 +74,9 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
           '/expense report — monthly spending report\n' +
           '/ai <text> — chat with Claude AI\n' +
           '/reset — clear AI conversation context\n\n' +
-          'Just send a PDF or .txt file — get an AI summary.\n' +
+          'Just send a PDF or .txt file — get an AI summary.\n\n' +
+          'HTTP API (for external services):\n' +
+          'POST /notify  { "chatId": "...", "text": "..." }\n\n' +
           'In private chat, any plain text message is sent to the AI.',
       );
     });
@@ -94,6 +98,7 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
 
     // Wire bot.api to services that need to push outbound messages
     this.remindersService.setBotApi(this.bot.api);
+    this.notifierService.setBotApi(this.bot.api);
 
     this.bot.start({
       onStart: (info) => this.logger.log(`Bot started as @${info.username}`),

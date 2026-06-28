@@ -4,9 +4,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: ['log', 'warn', 'error'] });
-  // The bot runs on long polling — no need to listen on a port.
-  // We still start the NestJS app so lifecycle hooks (onModuleInit) fire.
-  await app.init();
+  const port = process.env.PORT ?? 3000;
+  // HTTP server for inbound webhooks (e.g. POST /notify).
+  // Bot long polling starts in BotService.onModuleInit via bot.start().
+  await app.listen(port);
 }
 
 bootstrap().catch((err) => {
