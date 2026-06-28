@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Reminder {
+  id        String   @id @default(cuid())
+  chatId    BigInt
+  userId    BigInt
+  text      String
+  fireAt    DateTime
+  fired     Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([fireAt, fired])
+}
+
+model Flashcard {
+  id           String   @id @default(cuid())
+  userId       BigInt
+  chatId       BigInt
+  front        String
+  back         String
+  interval     Int      @default(1)
+  easeFactor   Float    @default(2.5)
+  nextReviewAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  @@index([userId, nextReviewAt])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  userId      BigInt
+  chatId      BigInt
+  amount      Float
+  description String
+  createdAt   DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
