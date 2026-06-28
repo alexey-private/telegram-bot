@@ -68,6 +68,8 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
           '/card add <question> | <answer> — add a flashcard\n' +
           '/card review — review due flashcards\n' +
           '/card list — list all your flashcards\n' +
+          '/expense <amount> <desc> — record an expense (e.g. /expense 500 coffee)\n' +
+          '/expense report — monthly spending report\n' +
           '/ai <text> — chat with Claude AI\n' +
           '/reset — clear AI conversation context\n\n' +
           'Just send a PDF or .txt file — get an AI summary.\n' +
