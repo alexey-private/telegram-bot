@@ -60,7 +60,11 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
       await next();
     });
 
-    // 3. /start command (core)
+    // 3. Core commands
+    this.bot.command('chatid', async (ctx) => {
+      await ctx.reply(`Your Chat ID: <code>${ctx.chat.id}</code>`, { parse_mode: 'HTML' });
+    });
+
     this.bot.command('start', async (ctx) => {
       await ctx.reply(
         'Hello! I am your multi-feature assistant bot.\n\n' +
